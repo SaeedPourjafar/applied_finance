@@ -429,17 +429,3 @@ all_models_aucs
 # datasets and situations since if for example number of observations in training
 # data is significantly smaller than the number of features, XGBoost is 
 # not recommended. 
-
-# Finding the best accuracy for the XGBoost model through a loop
-my_vector <- c()
-for(i in 1:length(ROCpred_t@cutoffs[[1]])) {
-  my_vector[i] <-  confusionMatrix(data = as.factor(
-    if_else(
-      predict_XGB > ROCpred_t@cutoffs[[1]][i],1,0)),
-                                                 reference = as.factor(test$default),positive = '1')$overall[1]
-  }
-threshold <- ROCpred_t@cutoffs[[1]][which.max(my_vector)]
-accuracy <- round(as.numeric(confusionMatrix(data = as.factor(if_else(predict_XGB > threshold,1,0)), 
-                                       reference = as.factor(test$default),positive = '1')$overall[1]),2)*100
-paste0("The best threshold for XGBoost model is ",round(threshold,2),
-       " which results in ",accuracy,"%"," of accuracy")
